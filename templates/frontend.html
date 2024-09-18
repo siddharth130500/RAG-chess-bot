@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Generation App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Ask a Question</h1>
+    <form id="query-form">
+        <label for="query">Enter your query:</label>
+        <input type="text" id="query" name="query" required>
+        <button type="submit">Submit</button>
+    </form>
+
+    <!-- Loading Animation and Text -->
+    <div id="loading" class="hidden">
+        <div class="spinner"></div>
+        <p>Loading... Please wait while we generate your response.</p>
+    </div>
+
+    <h2>Generated Response:</h2>
+    <p id="response"></p>
+    <script src="{{ url_for('static', filename='frontend.js') }}"></script>
+</body>
+</html>
