@@ -75,19 +75,44 @@ def get_embedding(text):
     embeddings = outputs.last_hidden_state.mean(dim=1).squeeze()
     return embeddings.numpy()
 
+# Path to save/load FAISS index
+faiss_index_file = "faiss_index.idx"
+faiss_embeddings_file = "chunk_embeddings.npy"
+
+# Function to save FAISS index
+def save_faiss_index(index, file_path):
+    faiss.write_index(index, file_path)
+
+# Function to load FAISS index
+def load_faiss_index(file_path):
+    return faiss.read_index(file_path)
+
 # Extract text from PDF
 pdf_text = extract_text_from_pdf("./Chess.pdf")
-
 # Ensure chunks are within the model's limit for DistilBERT
 distilbert_chunk_size = 512  # Max token length for DistilBERT
 document_chunks = chunk_text(pdf_text, max_length=distilbert_chunk_size)
 
-# Generate embeddings for each chunk
-chunk_embeddings = np.array([get_embedding(chunk) for chunk in document_chunks])
+# Check if FAISS index and embeddings are already saved
+if os.path.exists(faiss_index_file) and os.path.exists(faiss_embeddings_file):
+    print("Loading FAISS index from file...")
+    # Load the embeddings and FAISS index from disk
+    chunk_embeddings = np.load(faiss_embeddings_file)
+    idx = load_faiss_index(faiss_index_file)
+else:
+    print("FAISS index not found, creating a new one...")
+    
+    # Generate embeddings for each chunk
+    chunk_embeddings = np.array([get_embedding(chunk) for chunk in document_chunks])
 
-# Build the FAISS index
-idx = faiss.IndexFlatL2(chunk_embeddings.shape[1])  # L2 distance metric
-idx.add(chunk_embeddings)
+    # Build the FAISS index
+    idx = faiss.IndexFlatL2(chunk_embeddings.shape[1])  # L2 distance metric
+    idx.add(chunk_embeddings)
+
+    # Save the FAISS index and embeddings to disk
+    save_faiss_index(idx, faiss_index_file)
+    np.save(faiss_embeddings_file, chunk_embeddings)
+    print("FAISS index created and saved.")
 
 # Function to retrieve top-k closest document chunks
 def retrieve(query_embedding, top_k=5):
