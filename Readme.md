@@ -2,6 +2,8 @@
 
 This is a Chess Bot application that uses a combination of natural language processing models, including DistilBERT for embeddings and LLaMA 3 for text generation, to answer chess-related questions. The bot retrieves relevant information from a PDF textbook on chess, chunks the text, retrieves the most relevant pieces using FAISS, and generates a response using the LLaMA 3 model through AWS Bedrock.
 
+![Alt text](E:\SDSC\RAG_chess_bot\Image.JPG)
+
 ## Features
 
 - **Text Extraction**: Extracts text from a chess textbook in PDF format.
