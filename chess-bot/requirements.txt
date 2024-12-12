@@ -7,3 +7,4 @@ PyPDF2
 flask-cors
 boto3
 python-dotenv
+gunicorn

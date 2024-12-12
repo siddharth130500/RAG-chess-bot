@@ -9,6 +9,7 @@ import boto3
 import json
 from botocore.exceptions import ClientError
 from dotenv import load_dotenv
+import subprocess
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 
 from flask_cors import CORS
